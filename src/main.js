@@ -2,6 +2,16 @@ import Vue from "vue";
 import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies);
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
+
 
 import routes from "./routes";
 import VueRouter from "vue-router";
@@ -66,16 +76,22 @@ Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
+axios.defaults.withCredentials=true;
+
+
+
 const shared_data = {
+  server_domain: "http://localhost:3000",
   username: localStorage.username,
+
   login(username) {
-    localStorage.setItem("username", username);
+    localStorage.setItem("user_id", username);
     this.username = username;
     console.log("login", this.username);
   },
   logout() {
     console.log("logout");
-    localStorage.removeItem("username");
+    localStorage.removeItem("user_id");
     this.username = undefined;
   },
 };

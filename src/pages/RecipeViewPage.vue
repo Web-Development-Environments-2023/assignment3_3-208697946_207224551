@@ -5,38 +5,27 @@
         <h1>{{ recipe.title }}</h1>
         <img :src="recipe.image" class="center" />
       </div>
+      <div class="recipe-info mb-3">
+        <div class="info-item">Likes: {{ recipe.popularity }} likes</div>
+        <div class="info-item">Cook Time: {{ recipe.readyInMinutes }} minutes</div>
+        <div class="info-item">Servings: {{ recipe.servings }}</div>
+      </div>
       <div class="recipe-body">
         <div class="wrapper">
           <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
-            </div>
-            Ingredients:
+            <h2>Ingredients:</h2>
             <ul>
-              <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
-                {{ r.original }}
+              <li v-for="(ingredient, index) in recipe.ingredients" :key="index">
+                {{ ingredient.name }} - {{ ingredient.amount }}
               </li>
             </ul>
           </div>
           <div class="wrapped">
-            Instructions:
-            <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
-              </li>
-            </ol>
+            <h2>Instructions:</h2>
+            <div v-html="recipe.instructions"></div>
           </div>
         </div>
       </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
     </div>
   </div>
 </template>
@@ -45,7 +34,8 @@
 export default {
   data() {
     return {
-      recipe: null
+      recipe: null,
+
     };
   },
   async created() {
@@ -55,12 +45,9 @@ export default {
 
       try {
         response = await this.axios.get(
-          // "https://test-for-3-2.herokuapp.com/recipes/info",
-          this.$root.store.server_domain + "/recipes/info",
-          {
-            params: { id: this.$route.params.recipeId }
-          }
+          `${this.$root.store.server_domain}/recipes/${this.$route.params.recipeId}`
         );
+        console.log(response);
 
         // console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
@@ -71,28 +58,31 @@ export default {
       }
 
       let {
-        analyzedInstructions,
+        is_favorite,
+        watched,
         instructions,
-        extendedIngredients,
-        aggregateLikes,
+        glutenFree,
+        vegan,
+        vegetarian,
+        servings,
+        ingredients,
+        popularity,
         readyInMinutes,
         image,
         title
-      } = response.data.recipe;
+      } = response.data;
 
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
 
       let _recipe = {
+        is_favorite,
+        watched,
         instructions,
-        _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
+        glutenFree,
+        vegan,
+        vegetarian,
+        servings,
+        ingredients,
+        popularity,
         readyInMinutes,
         image,
         title
@@ -107,19 +97,60 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.recipe-header {
+  text-align: center;
+}
+
+.recipe-header h1 {
+  font-size: 32px;
+}
+
+.center {
+  display: block;
+  margin: 20px auto;
+  width: 100%;
+  /* max-width: 400px; */
+}
+
+.recipe-info {
+  display: flex;
+  justify-content: space-around;
+  font-size: 18px;
+}
+
+.recipe-body {
+  margin-top: 20px;
+}
+
 .wrapper {
   display: flex;
 }
+
 .wrapped {
   width: 50%;
 }
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-/* .recipe-header{
 
-} */
+.wrapped h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.recipe-body ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.recipe-body ol {
+  list-style-type: decimal;
+  margin-left: 20px;
+}
+
+.info-item {
+  display: inline-block;
+}
 </style>
