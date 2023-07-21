@@ -224,7 +224,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Anton');
+
 .container {
   max-width: 500px;
+  // font-family: 'Anton';
+}
+.title{
+  font-family: 'Anton';
+  margin-bottom: 40px;
 }
 </style>
