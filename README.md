@@ -1,7 +1,7 @@
 
 # recepies
-We were asked to build a system for searching recipes, from an existing recipe database. The requirements are:
-1. For each recipe, the system will display: the private recipe, preparation instructions and an option to follow up a recipe.
+We were asked to build a website for searching recipes, from an existing recipe database. The requirements are:
+1. For each recipe we will diplay its details and an image. 
 
 2. Personal by the user.
 
