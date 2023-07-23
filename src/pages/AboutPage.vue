@@ -28,8 +28,10 @@
 @import url('https://fonts.googleapis.com/css?family=Anton');
 
 .container{
+    margin-top: 20px;
+    max-width: 600px;
     align-items: center;
     // font-family: 'PT Sans';
-    font-size: 22px;
+    font-size: 18px;
 }
 </style>

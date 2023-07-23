@@ -67,6 +67,7 @@ export default {
         if (this.sortOption) {
           this.sortRecipes();
         }
+
       } catch (error) {
         console.log(error);
       }
@@ -77,8 +78,9 @@ export default {
       } else if (this.sortOption === "popularity") {
         this.recipes.sort((a, b) => b.popularity - a.popularity);
       }
-    }
+    },
   }
+  
 };
 </script>
 

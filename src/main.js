@@ -81,7 +81,8 @@ axios.defaults.withCredentials=true;
 
 
 const shared_data = {
-  server_domain: "http://localhost:3000",
+  server_domain: "https://eden-raz.cs.bgu.ac.il",
+  //  http://localhost:3000",
   username: localStorage.username,
 
   login(username) {

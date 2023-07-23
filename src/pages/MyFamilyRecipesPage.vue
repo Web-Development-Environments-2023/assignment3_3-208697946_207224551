@@ -1,16 +1,15 @@
 <template>
     <div class="container">
       <h1 class="title">My Family Recipes</h1>
-      <RecipePreviewList title="My Family Recipes" :serverPath="'/users/myFamilyRecipes'" class="favorites" />
+      <FamilyRecipeList/>
     </div>
   </template>
     
     <script>
-    import RecipePreviewList from "../components/RecipePreviewList";
+    import FamilyRecipeList from "../components/FamilyRecipeList";
     export default {
       components: {
-        RecipePreviewList
-      }
+        FamilyRecipeList      }
     };
     </script>
     
@@ -23,12 +22,13 @@
       display: flex;
       flex-direction: column;
       align-items: center; /* Center the title horizontally */
-      font-family: 'Anton';
-      color: #bf1010;
+
     }
     
     .title {
-      font-size: 70px;
+      font-family: 'Anton';
+      color: #bf1010;
+      font-size: 40px;
       margin: 20px 0; /* Add margin to the title (adjust the value as needed) */
     }
     

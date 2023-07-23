@@ -85,7 +85,7 @@ export default {
 #nav a {
   font-family: 'Anton';
   // font-family: 'Noto Sans Cypro Minoan';
-  font-size: 30px;
+  font-size: 20px;
   color: #333; /* Set the font color */
   text-decoration: none;
   padding: 15px; /* Add padding to create spacing between tabs */
@@ -98,14 +98,14 @@ export default {
 
 .left-section {
   font-family: 'Anton';
-  font-size: 30px;
+  font-size: 20px;
   display: flex;
   align-items: center;
 }
 
 .right-section {
   font-family: 'Anton';
-  font-size: 30px;
+  font-size: 20px;
   display: flex;
   align-items: center;
 }
@@ -121,7 +121,7 @@ export default {
   padding: 10px;
   border: none;
   cursor: pointer;
-  font-size: 30px; /* Increase the font size */
+  font-size: 20px; /* Increase the font size */
 }
 
 .dropdown-content {
@@ -153,8 +153,8 @@ export default {
 }
 
 .logo{
-  width: 200px;
-  height: 100px;
+  width: 112.5px;
+  height: 56.25px;
 }
 </style>
 

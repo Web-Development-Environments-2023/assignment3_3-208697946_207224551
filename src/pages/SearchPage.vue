@@ -141,6 +141,14 @@ export default {
 ], 
     };
   },
+  created() {
+  // Retrieve the last search query from localStorage
+  const lastSearchQuery = localStorage.getItem('lastSearchQuery');
+
+  if (lastSearchQuery) {
+    this.searchQuery = lastSearchQuery;
+  }
+},
   methods: {
     search() {
       this.serverPath = '';
@@ -164,6 +172,8 @@ export default {
       }
 
       this.showResults = true; 
+
+      localStorage.setItem('lastSearchQuery', this.searchQuery);
 
       // Reset the searchQuery, cuisine, diet, intolerance, and resultsNum for a fresh search
       this.searchQuery = '';

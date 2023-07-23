@@ -6,7 +6,7 @@
         <img :src="recipe.image" class="center" />
       </div>
       <div class="recipe-info mb-3">
-        <div class="info-item">Likes: {{ recipe.popularity }} likes</div>
+        <div v-if="recipe.popularity !== undefined" class="info-item">Likes: {{ recipe.popularity }} likes</div>
         <div class="info-item">Cook Time: {{ recipe.readyInMinutes }} minutes</div>
         <div class="info-item">Servings: {{ recipe.servings }}</div>
       </div>
@@ -152,5 +152,6 @@ export default {
 
 .info-item {
   display: inline-block;
+  font-weight: bold;
 }
 </style>

@@ -14,14 +14,22 @@
 
       
         <div class="row-item center-text">
-          <h2 class="title">Take A pick -></h2>
+          <h2 class="title">Take A Look -></h2>
+          <div class="reload">
+            <img src="@/assets/reload.png" @click="showMoreRandomRecipes" class="reload-image" alt="Reload" />
+          </div>
+
         </div>
       
       <div class="row">
         <div class="row-item center-text">
-          <RecipePreviewList title="Random Recipes" :serverPath="'/recipes/random'" class="RandomRecipes" />
+          <RecipePreviewList ref="recipePreviewList" title="Random Recipes" :serverPath="'/recipes/random'" class="RandomRecipes" />
+         
+
         </div>
       </div>
+
+
 
       <div v-if="isLoggedIn">
         
@@ -80,6 +88,13 @@ export default {
   computed: {
     isLoggedIn() {
       return Boolean(this.$root.store.username);
+    },
+  },
+  methods: {
+    async showMoreRandomRecipes() {
+      console.log('clicked');
+      // Call the method in RecipePreviewList component to fetch new random recipes
+      await this.$refs.recipePreviewList.updateRecipes();
     },
   },
 };
@@ -173,6 +188,15 @@ export default {
   margin-left: 100px; /* Add space between the two sections */
 }
 
+.reload-image {
+  cursor: pointer;
+  width:40px;
+  height:40px;
+  opacity: 0.5;
+}
+.reload{
+  margin-left: 50px;
+}
 
 </style>
 

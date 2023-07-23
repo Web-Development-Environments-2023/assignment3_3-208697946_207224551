@@ -1,59 +1,78 @@
 <template>
   <div class="create-recipe">
-    <h1>Create Recipe</h1>
     <h2>Tell us about your recipe:</h2>
-    <form @submit.prevent="createRecipe" class="form-group">
-      <div class="form-row">
-        <label for="title" class="label">Recipe name:</label>
-        <input type="text" id="title" v-model="recipe.title" required class="input-box">
-      </div>
-      <div class="form-row">
-        <label for="image" class="label">Image:</label>
-        <input type="text" id="image" v-model="recipe.image" required class="input-box">
-      </div>
-      <div class="form-row">
-        <label for="readyInMinutes" class="label">Ready in Minutes:</label>
-        <input type="number" id="readyInMinutes" v-model="recipe.readyInMinutes" required class="input-box">
-      </div>
-      <div class="form-row">
-        <div class="selectable-button" :class="{ selected: recipe.vegetarian }" @click="recipe.vegetarian = !recipe.vegetarian">Vegetarian</div>
-        <div class="selectable-button" :class="{ selected: recipe.vegan }" @click="recipe.vegan = !recipe.vegan">Vegan</div>
-        <div class="selectable-button" :class="{ selected: recipe.glutenFree }" @click="recipe.glutenFree = !recipe.glutenFree">Gluten-Free</div>
-      </div>
-
-      <div class="form-row">
-        <label for="ingredients" class="label">Ingredients:</label>
-        <div class="ingredient-list">
-          <div class="ingredient-row" v-for="(ingredient, index) in recipe.ingredients" :key="index">
-            <div class="ingredient-fields">
-              <input type="text" v-model="ingredient.name" placeholder="Ingredient name" required class="input-box">
-              <input type="text" v-model="ingredient.amount" placeholder="Amount" required class="input-box">
-            </div>
-            <button type="button" @click="removeIngredient(index)" v-if="index !== 0">-</button>
-          </div>
-          <button type="button" @click="addIngredient" class="add-button">+</button>
+    <b-container>
+      <b-row class="justify-content-center">
+        <b-col cols="12" sm="8" md="6">
+          <b-button @click="showModal = true" block>Create Recipe</b-button>
+        </b-col>
+      </b-row>
+    </b-container>
+    <b-modal v-model="showModal" title="Create Recipe" @ok="createRecipe">
+      <div class="create-recipe">
+        <form @submit.prevent="createRecipe" class="form-group">
+          <div class="form-row">
+          <label for="title" class="label">Recipe name:</label>
+          <input type="text" id="title" v-model="recipe.title" required class="input-box">
         </div>
-      </div>
+        <div class="form-row">
+          <label for="image" class="label">Image:</label>
+          <input type="text" id="image" v-model="recipe.image" required class="input-box">
+        </div>
+        <div class="form-row">
+          <label for="readyInMinutes" class="label">Ready in Minutes:</label>
+          <input type="number" id="readyInMinutes" v-model="recipe.readyInMinutes" required class="input-box">
+        </div>
 
-      <div class="form-row">
-        <label for="instructions" class="label">Instructions:</label>
-        <textarea id="instructions" v-model="recipe.instructions" required class="input-box"></textarea>
+        <div class="form-row">
+            <div class="dietary-options">
+              <div class="selectable-button" :class="{ selected: recipe.vegetarian }" @click="recipe.vegetarian = !recipe.vegetarian">Vegetarian</div>
+              <div class="selectable-button" :class="{ selected: recipe.vegan }" @click="recipe.vegan = !recipe.vegan">Vegan</div>
+              <div class="selectable-button" :class="{ selected: recipe.glutenFree }" @click="recipe.glutenFree = !recipe.glutenFree">Gluten-Free</div>
+            </div>
+          </div>
+
+
+        <div class="form-row">
+            <label for="ingredients" class="label">Ingredients:</label>
+            <div class="ingredient-list">
+              <div class="ingredient-row" v-for="(ingredient, index) in recipe.ingredients" :key="index">
+                <div class="ingredient-fields">
+                  <input type="text" v-model="ingredient.name" placeholder="Ingredient name" required class="input-box">
+                  <input type="text" v-model="ingredient.amount" placeholder="Amount" class="input-box">
+                </div>
+                <button type="button" @click="removeIngredient(index)" v-if="index !== 0">-</button>
+              </div>
+            </div>
+            <button type="button" @click="addIngredient" class="add-button">+</button>
+          </div>
+
+        <div class="form-row">
+          <label for="instructions" class="label">Instructions:</label>
+          <textarea id="instructions" v-model="recipe.instructions" required class="input-box"></textarea>
+        </div>
+        <div class="form-row">
+          <label for="servings" class="label">Servings:</label>
+          <input type="number" id="servings" v-model="recipe.servings" required class="input-box">
+        </div>
+
+        </form>
       </div>
-      <div class="form-row">
-        <label for="servings" class="label">Servings:</label>
-        <input type="number" id="servings" v-model="recipe.servings" required class="input-box">
-      </div>
-      <div class="form-row">
-        <button type="submit">Create</button>
-      </div>
-    </form>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { BButton, BModal } from 'bootstrap-vue';
+
 export default {
+  components: {
+    BButton,
+    BModal
+  },
   data() {
     return {
+      showModal: false,
       recipe: {
         title: '',
         image: '',
@@ -73,7 +92,7 @@ export default {
         const response = await this.axios.post(this.$root.store.server_domain + '/users/myRecipes', this.recipe, { withCredentials: true });
         console.log(response.data);
 
-        // Reset the form after submitting
+        // Reset the form after successful creation
         this.recipe = {
           title: '',
           image: '',
@@ -85,6 +104,9 @@ export default {
           instructions: '',
           servings: 0
         };
+
+        // Close the modal after successful creation
+        this.showModal = false;
       } catch (error) {
         console.log(error);
       }
@@ -100,11 +122,13 @@ export default {
 </script>
 
 <style scoped>
+
 .create-recipe {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  justify-content: center;
+  text-align: center;
 }
 
 .create-recipe > h1,
@@ -114,30 +138,37 @@ export default {
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 80%; /* Adjust this width as needed */
+  margin: 0 auto
 }
 
 .form-row {
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
 }
 
 .label {
   font-weight: bold;
-  display: flex;
-  align-items: center;
+
+  flex: 0 0 150px; /* Fixed width for the labels */
+
 }
 
 .input-box {
-  width: 300px;
+  flex: 1; /* Take remaining width for the input boxes */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  margin-top: 5px;
 }
 
+.dietary-options {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  width: 100%;
+}
 .ingredient-list {
   list-style-type: none;
   padding: 0;
@@ -152,10 +183,11 @@ export default {
 .ingredient-fields {
   display: flex;
   align-items: center;
+  flex: 1; /* Take the available width */
+  margin-right: 10px; /* Add some spacing between the input boxes and the "Add" button */
 }
-
 .add-button {
-  background-color: #4CAF50;
+  background-color:#ccc;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -164,7 +196,7 @@ export default {
 }
 
 .add-button:hover {
-  background-color: #45a049;
+  background-color: #bf1010;
 }
 
 textarea {
@@ -178,7 +210,7 @@ textarea {
 }
 
 button[type="submit"] {
-  background-color: #4CAF50;
+  background-color:#bf1010;;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -188,7 +220,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #bf1010;;
 }
 
 .selectable-button {
@@ -206,7 +238,7 @@ button[type="submit"]:hover {
 }
 
 .selectable-button.selected {
-  background-color: green;
+  background-color: #bf1010;;
   color: #fff;
 }
 </style>

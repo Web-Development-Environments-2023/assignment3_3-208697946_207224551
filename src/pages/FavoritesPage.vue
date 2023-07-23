@@ -28,8 +28,8 @@
   }
   
   .title {
-    font-size: 70px;
-    margin: 50px 0; /* Add margin to the title (adjust the value as needed) */
+    font-size: 40px;
+    margin: 40px 0; /* Add margin to the title (adjust the value as needed) */
   }
   
   .favorites {

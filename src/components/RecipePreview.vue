@@ -117,8 +117,8 @@ export default {
 }
 
 .image-container {
-  width: 400px; /* Adjust the width as needed */
-  height: 300px;
+  width: 350px; /* Adjust the width as needed */
+  height: 200px;
   /* padding-bottom: 66.67%; 2:3 aspect ratio (300 / 200) * 100 = 150% */
   position: relative;
   margin: 10px;
