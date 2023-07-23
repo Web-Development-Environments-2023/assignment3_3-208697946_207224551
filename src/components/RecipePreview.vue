@@ -1,33 +1,65 @@
 <template>
-  <router-link
-    :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-    class="recipe-preview"
-  >
-    <div class="recipe-body">
-      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
-    </div>
-    <div class="recipe-footer">
-      <div :title="recipe.title" class="recipe-title">
-        {{ recipe.title }}
+  <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
+    <div :class="{ 'recipe-body': true, 'watched': recipe.Watched }">
+      <div class="image-container">
+        <img :src="recipe.image" class="recipe-image" />
+        <span @click.prevent="toggleFavorite" class="heart-icon" :style="{ opacity: recipe.is_favorite ? 1 : 0.6 }"></span>
       </div>
-      <ul class="recipe-overview">
-        <li>{{ recipe.readyInMinutes }} minutes</li>
-        <li>{{ recipe.aggregateLikes }} likes</li>
-      </ul>
+      <div class="recipe-content">
+        <h3 class="recipe-title">{{ recipe.title }}</h3>
+        <ul class="recipe-info">
+          <li>{{ recipe.readyInMinutes }} minutes</li>
+          <li>{{ recipe.popularity }} likes</li>
+          <li>
+            <div class="icon-row">
+              <img
+                v-if="recipe.vegan"
+                :src="veganIcon"
+                alt="Vegan"
+                class="icon"
+                v-b-tooltip.hover="'Vegan'"
+
+              />
+              <img
+                v-if="recipe.vegetarian"
+                :src="vegetarianIcon"
+                alt="Vegetarian"
+                class="icon"
+                v-b-tooltip.hover="'Vegetarian'"
+
+              />
+              <img
+                v-if="recipe.glutenFree"
+                :src="glutenFreeIcon"
+                alt="Gluten-free"
+                class="icon"
+                v-b-tooltip.hover="'Gluten-free'"
+
+              />
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </router-link>
 </template>
 
+
+
 <script>
+
+import veganIcon from '@/assets/vegan.png';
+import vegetarianIcon from '@/assets/vegeterian.png';
+import glutenFreeIcon from '@/assets/glutenFree.png';
 export default {
-  mounted() {
-    this.axios.get(this.recipe.image).then((i) => {
-      this.image_load = true;
-    });
-  },
+
+
   data() {
     return {
-      image_load: false
+      veganIcon,
+      vegetarianIcon,
+      glutenFreeIcon,
+      // image_load: false
     };
   },
   props: {
@@ -35,107 +67,131 @@ export default {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    async toggleFavorite() {
+      if (this.recipe.is_favorite == false){
+        try{
+          this.recipe.is_favorite = true;
+          const favoriteRecipe = {
+          recipeId: this.recipe.id
+        };
 
-    // id: {
-    //   type: Number,
-    //   required: true
-    // },
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // readyInMinutes: {
-    //   type: Number,
-    //   required: true
-    // },
-    // image: {
-    //   type: String,
-    //   required: true
-    // },
-    // aggregateLikes: {
-    //   type: Number,
-    //   required: false,
-    //   default() {
-    //     return undefined;
-    //   }
-    // }
+        const response = await this.axios.post(`${this.$root.store.server_domain}/users/favorites`, favoriteRecipe)
+        console.log(response);
+
+        }
+        catch(error){
+          console.log(error);
+        }
+
+      }
+
+    }
   }
 };
 </script>
 
 <style scoped>
 .recipe-preview {
-  display: inline-block;
-  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   height: 100%;
   position: relative;
-  margin: 10px 10px;
-}
-.recipe-preview > .recipe-body {
-  width: 100%;
-  height: 200px;
-  position: relative;
+  margin: 20px 0px;
+  width: 300px; /* Adjust the width as needed */
 }
 
-.recipe-preview .recipe-body .recipe-image {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
-  display: block;
-  width: 98%;
-  height: auto;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-}
-
-.recipe-preview .recipe-footer {
-  width: 100%;
-  height: 50%;
-  overflow: hidden;
-}
-
-.recipe-preview .recipe-footer .recipe-title {
-  padding: 10px 10px;
-  width: 100%;
-  font-size: 12pt;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-}
-
-.recipe-preview .recipe-footer ul.recipe-overview {
-  padding: 5px 10px;
-  width: 100%;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.recipe-body {
   display: flex;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1 auto;
-  -ms-flex: 1 auto;
-  flex: 1 auto;
-  table-layout: fixed;
-  margin-bottom: 0px;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  color: black;
 }
 
-.recipe-preview .recipe-footer ul.recipe-overview li {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  width: 90px;
-  display: table-cell;
-  text-align: center;
+.recipe-body.watched{
+  color: blue;
+}
+
+.image-container {
+  width: 350px; /* Adjust the width as needed */
+  height: 200px;
+  /* padding-bottom: 66.67%; 2:3 aspect ratio (300 / 200) * 100 = 150% */
+  position: relative;
+  margin: 10px;
+}
+
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.recipe-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.recipe-title {
+  font-size: 20px;
+  /* font-weight: bold; */
+  margin-bottom: 5px;
+}
+
+.recipe-info {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recipe-info li {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.icon-row {
+  display: flex;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+.heart-icon {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background-image: url('~@/assets/white_heart.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+  opacity: 0.6; /* Make the heart icon slightly transparent by default */
+  transition: opacity 0.3s;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the heart icon */
+}
+
+.favorite .heart-icon {
+  /* opacity: 1; Make the heart icon fully opaque when it's favorited */
+}
+
+.heart-icon:hover {
+  opacity: 0.3; /* Make the heart icon slightly transparent on hover */
 }
 </style>
+
+

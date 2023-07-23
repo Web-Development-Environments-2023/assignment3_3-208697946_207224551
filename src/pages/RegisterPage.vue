@@ -26,6 +26,60 @@
       </b-form-group>
 
       <b-form-group
+      id="input-group-firstname"
+      label-cols-sm="3"
+      label="First Name:"
+      label-for="firstname"
+    >
+      <b-form-input
+        id="firstname"
+        v-model="$v.form.firstName.$model"
+        type="text"
+        :state="validateState('firstName')"
+      ></b-form-input>
+      <b-form-invalid-feedback v-if="!$v.form.firstName.required">
+        First name is required
+      </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      id="input-group-lastname"
+      label-cols-sm="3"
+      label="Last Name:"
+      label-for="lastname"
+    >
+      <b-form-input
+        id="lastname"
+        v-model="$v.form.lastName.$model"
+        type="text"
+        :state="validateState('lastName')"
+      ></b-form-input>
+      <b-form-invalid-feedback v-if="!$v.form.lastName.required">
+        Last name is required
+      </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      id="input-group-email"
+      label-cols-sm="3"
+      label="Email:"
+      label-for="email"
+    >
+      <b-form-input
+        id="email"
+        v-model="$v.form.email.$model"
+        type="email"
+        :state="validateState('email')"
+      ></b-form-input>
+      <b-form-invalid-feedback v-if="!$v.form.email.required">
+        Email is required
+      </b-form-invalid-feedback>
+      <b-form-invalid-feedback v-else-if="!$v.form.email.email">
+        Please enter a valid email address
+      </b-form-invalid-feedback>
+    </b-form-group>
+
+      <b-form-group
         id="input-group-country"
         label-cols-sm="3"
         label="Country:"
@@ -166,7 +220,18 @@ export default {
       confirmedPassword: {
         required,
         sameAsPassword: sameAs("password")
-      }
+      },
+      firstName: {
+      required
+    },
+    lastName: {
+      required
+    },
+    email: {
+      required,
+      email
+    }
+
     }
   },
   mounted() {
@@ -224,7 +289,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Anton');
+
 .container {
   max-width: 500px;
+  // font-family: 'Anton';
+}
+.title{
+  font-family: 'Anton';
+  margin-bottom: 40px;
 }
 </style>
