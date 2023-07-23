@@ -125,6 +125,7 @@ export default {
 
 .recipe-body {
   margin-top: 20px;
+  margin-bottom: 100px;
 }
 
 .wrapper {
